@@ -18,6 +18,8 @@ affiliations:
    index: 1
 date: 10 August 2025
 bibliography: paper.bib
+repository: https://github.com/takeshi-sato-dev/claire
+archive_doi: 10.5281/zenodo.16787668  
 ---
 
 # Summary

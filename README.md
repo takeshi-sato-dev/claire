@@ -3,6 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org)
 [![CI](https://github.com/username/claire/actions/workflows/ci.yml/badge.svg)](https://github.com/username/claire/actions/workflows/ci.yml)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16787668.svg)](https://doi.org/10.5281/zenodo.16787668)
 
 CLAIRE is a Python package for analyzing mediator-induced lipid redistribution around membrane proteins in molecular dynamics simulations, with a focus on conservation-aware analysis methods that respect fundamental physical laws.
 
