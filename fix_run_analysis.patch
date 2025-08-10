@@ -1,0 +1,43 @@
+--- run_analysis.py.old
++++ run_analysis.py.new
+@@ -34,120 +34,8 @@
+ from claire.visualization.plots import Visualizer
+ from claire.visualization.figures import FigureGenerator
+ 
+-
+-class InteractiveConfig:
+-    """Handle interactive configuration input"""
+-    
+-    @staticmethod
+-    def get_input(prompt: str, default: Optional[str] = None, 
+-                  type_func=str, choices: Optional[List] = None) -> any:
+-        # ... (remove entire InteractiveConfig class)
+-    
+-    @staticmethod
+-    def interactive_setup():
+-        # ... (remove entire method)
+-        pass
++# Import CLI function
++from claire.cli import get_interactive_config
+ 
+ 
+ def main():
+@@ -156,7 +44,7 @@
+     # Check if any command-line arguments were provided
+     if len(sys.argv) == 1:
+         # No arguments - run interactive mode
+-        args = InteractiveConfig.interactive_setup()
++        args_dict = get_interactive_config()
++        
++        # Convert dict to args object
++        class Args:
++            pass
++        args = Args()
++        for key, value in args_dict.items():
++            setattr(args, key, value)
++        
++        # Set defaults for missing values
++        args.leaflet_frame = getattr(args, 'leaflet_frame', 0)
++        args.leaflet = getattr(args, 'leaflet', 'upper')
++        args.smooth_window = getattr(args, 'smooth_window', 20)
+     else:

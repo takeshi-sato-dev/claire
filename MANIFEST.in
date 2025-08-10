@@ -1,0 +1,11 @@
+include README.md
+include LICENSE
+include paper.md
+include paper.bib
+include requirements.txt
+include requirements-dev.txt
+recursive-include claire *.py
+recursive-include tests *.py
+recursive-include test_data *.psf *.xtc
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]

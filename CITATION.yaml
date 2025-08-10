@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+title: "CLAIRE: Conserved Lipid Analysis with Interaction and Redistribution Evaluation"
+message: "If you use this software, please cite it as below."
+type: software
+authors:
+  - family-names: "Sato"
+    given-names: "Takeshi"
+    orcid: "https://orcid.org/  orcid: 0009-0006-9156-8655"
+    affiliation: "Kyoto Pharmaceutical University"
+repository-code: "https://github.com/takeshi-sato-dev/claire"
+url: "https://claire.readthedocs.io"
+doi: 10.21105/joss.XXXXX
+date-released: 2025-01-10
+version: 0.1.0
+keywords:
+  - molecular dynamics
+  - lipid bilayers
+  - membrane proteins
+  - GM3 ganglioside
+  - machine learning
+  - conservation analysis
+license: MIT
