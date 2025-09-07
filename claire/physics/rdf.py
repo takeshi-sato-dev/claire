@@ -20,7 +20,7 @@ class RDFCalculator:
                             n_bins: int = 40) -> Tuple[np.ndarray, np.ndarray]:
         """
         Calculate actual radial distribution function
-        FROM ORIGINAL aiml13_no_causal.py - EXACT COPY
+        FROM ORIGINAL original_analysis_no_causal.py - EXACT COPY
         """
         if len(lipid_positions) == 0:
             return np.linspace(0, max_radius, n_bins), np.zeros(n_bins)

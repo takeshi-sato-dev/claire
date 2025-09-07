@@ -28,7 +28,7 @@ def get_interactive_config() -> Dict:
                 'topology': 'test_data/test_system.psf',
                 'trajectory': 'test_data/test_trajectory.xtc',
                 'mediator': 'DPG3',
-                'targets': ['DOPC', 'DPSM', 'CHOL'],
+                'targets': ['CHOL', 'DPSM', 'DIPC'],
                 'start': 0,
                 'stop': 100,  # Process 100 frames for test data
                 'step': 1,     # Process every frame for test
@@ -162,11 +162,11 @@ def get_interactive_config() -> Dict:
     
     # Target lipids
     print("\nTarget lipids to analyze (space-separated)")
-    targets_input = input("Target lipids [DIPC DPSM CHOL]: ").strip()
+    targets_input = input("Target lipids [CHOL DPSM DIPC]: ").strip()
     if targets_input:
         config['targets'] = targets_input.upper().split()
     else:
-        config['targets'] = ['DIPC', 'DPSM', 'CHOL']
+        config['targets'] = ['CHOL', 'DPSM', 'DIPC']
     
     print("\n" + "─" * 40)
     print("3. ANALYSIS PARAMETERS")

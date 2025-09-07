@@ -10,6 +10,85 @@ from typing import Dict, Tuple, Optional, List
 import warnings
 warnings.filterwarnings('ignore')
 
+# Global parameters from original_analysis
+LEAFLET_FRAME = 20000
+
+
+def identify_lipid_leaflets(u, frame=LEAFLET_FRAME):
+    """Identify lipid leaflets - EXACT COPY FROM ORIGINAL_ANALYSIS"""
+    try:
+        u.trajectory[frame]
+        print(f"Identifying lipid leaflets at frame {frame}...")
+        L = LeafletFinder(u, "name GL1 GL2 AM1 AM2 ROH GM1 GM2")
+        cutoff = L.update(10)
+        leaflet0 = L.groups(0)
+        leaflet1 = L.groups(1)
+        
+        print(f"Leaflet 0: {len(leaflet0)} atoms")
+        print(f"Leaflet 1: {len(leaflet1)} atoms")
+        
+        z0 = leaflet0.center_of_mass()[2]
+        z1 = leaflet1.center_of_mass()[2]
+        
+        if z0 > z1:
+            upper_leaflet = leaflet0
+            lower_leaflet = leaflet1
+        else:
+            upper_leaflet = leaflet1
+            lower_leaflet = leaflet0
+            
+        print(f"Upper leaflet Z: {upper_leaflet.center_of_mass()[2]:.2f}")
+        print(f"Lower leaflet Z: {lower_leaflet.center_of_mass()[2]:.2f}")
+        
+        return upper_leaflet, lower_leaflet
+    except Exception as e:
+        print(f"Error identifying lipid leaflets: {e}")
+        return None, None
+
+
+def select_lipids_and_chol(leaflet, u):
+    """Select lipids from leaflet - EXACT COPY FROM ORIGINAL_ANALYSIS"""
+    selections = {}
+    lipid_types = ['CHOL', 'DIPC', 'DPSM', 'DPG3']
+    
+    for resname in lipid_types:
+        try:
+            selection = leaflet.select_atoms(f"resname {resname}")
+            selections[resname] = selection
+            print(f"Found {len(selection.residues)} {resname} residues in leaflet")
+        except Exception as e:
+            print(f"Could not select lipid type {resname}: {e}")
+            selections[resname] = mda.AtomGroup([], u)
+    
+    return selections
+
+
+def identify_proteins(u):
+    """Identify proteins - EXACT COPY FROM ORIGINAL_ANALYSIS"""
+    proteins = {}
+    try:
+        protein_residues = u.select_atoms("protein")
+        if len(protein_residues) == 0:
+            protein_residues = u.select_atoms("resname PROT")
+        
+        if len(protein_residues) == 0:
+            print("WARNING: No protein residues found")
+            return {}
+        
+        segids = np.unique(protein_residues.segids)
+        
+        for i, segid in enumerate(segids):
+            protein_selection = protein_residues.select_atoms(f"segid {segid}")
+            if len(protein_selection) > 0:
+                protein_name = f"Protein_{i+1}"
+                proteins[protein_name] = protein_selection
+                print(f"Found {protein_name} ({segid}) with {len(protein_selection)} atoms")
+        
+        return proteins
+    except Exception as e:
+        print(f"Error identifying proteins: {e}")
+        return {}
+
 
 class MembraneSystem:
     """
@@ -148,69 +227,9 @@ class MembraneSystem:
         self.proteins = proteins
         return proteins
     
-    def identify_leaflets(self, frame: int = 0, 
-                         lipid_selection: Optional[str] = None) -> Tuple:
-        """
-        Identify membrane leaflets
-        
-        Parameters
-        ----------
-        frame : int
-            Frame to use for leaflet identification
-        lipid_selection : str, optional
-            Custom selection string for leaflet identification
-        
-        Returns
-        -------
-        tuple
-            (upper_leaflet, lower_leaflet) as AtomGroups
-        """
-        self.universe.trajectory[frame]
-        
-        if self.verbose:
-            print(f"\nIdentifying leaflets at frame {frame}...")
-        
-        # Default selection: headgroup atoms
-        if lipid_selection is None:
-            # Common headgroup atoms across different force fields
-            lipid_selection = "name GL1 GL2 AM1 AM2 ROH GM1 GM2 PO4 P8 P"
-            
-            # Add any identified lipid headgroups
-            if self.lipids:
-                selection = self.universe.select_atoms(lipid_selection)
-                if len(selection) == 0:
-                    # Fallback: use all lipid atoms
-                    resnames = list(self.lipids.keys())
-                    lipid_selection = f"resname {' '.join(resnames)}"
-        
-        # Use LeafletFinder
-        L = LeafletFinder(self.universe, lipid_selection)
-        cutoff = L.update(10)
-        
-        leaflet0 = L.groups(0)
-        leaflet1 = L.groups(1)
-        
-        # Determine upper and lower by z-coordinate
-        z0 = leaflet0.center_of_mass()[2]
-        z1 = leaflet1.center_of_mass()[2]
-        
-        if z0 > z1:
-            upper_leaflet = leaflet0
-            lower_leaflet = leaflet1
-        else:
-            upper_leaflet = leaflet1
-            lower_leaflet = leaflet0
-        
-        if self.verbose:
-            print(f"  Upper leaflet: {len(upper_leaflet)} atoms, "
-                  f"Z = {upper_leaflet.center_of_mass()[2]:.2f}")
-            print(f"  Lower leaflet: {len(lower_leaflet)} atoms, "
-                  f"Z = {lower_leaflet.center_of_mass()[2]:.2f}")
-        
-        self.leaflets['upper'] = upper_leaflet
-        self.leaflets['lower'] = lower_leaflet
-        
-        return upper_leaflet, lower_leaflet
+    def identify_leaflets(self, frame: int = LEAFLET_FRAME) -> Tuple:
+        """Use original_analysis's exact leaflet identification"""
+        return identify_lipid_leaflets(self.universe, frame)
     
     def select_lipids_in_leaflet(self, leaflet: str = 'upper', 
                                  lipid_types: Optional[List[str]] = None) -> Dict:

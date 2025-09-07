@@ -91,8 +91,8 @@ class ConservationAnalyzer:
         """
         results = {}
         
-        # First calculate composition ratios
-        data = self.calculate_composition_ratios(data, lipid_columns)
+        # DON'T calculate composition ratios first - this is the key fix
+        # We will calculate them separately for high and low groups
         
         if method == 'quartile':
             # Split by quartiles
@@ -111,6 +111,19 @@ class ConservationAnalyzer:
         else:  # continuous
             # Use correlation-based analysis
             return self._continuous_analysis(data, mediator_column, lipid_columns)
+        
+        # Calculate composition ratios SEPARATELY for each group (analysis method)
+        if len(high_mediator) > 0:
+            high_total = sum(high_mediator[col] for col in lipid_columns)
+            high_total = high_total.replace(0, 1)
+            for col in lipid_columns:
+                high_mediator[col.replace('_count', '_ratio')] = high_mediator[col] / high_total
+        
+        if len(low_mediator) > 0:
+            low_total = sum(low_mediator[col] for col in lipid_columns)
+            low_total = low_total.replace(0, 1)
+            for col in lipid_columns:
+                low_mediator[col.replace('_count', '_ratio')] = low_mediator[col] / low_total
         
         # Compare high vs low mediator conditions
         for lipid_col in lipid_columns:

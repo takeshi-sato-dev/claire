@@ -93,7 +93,7 @@ class TemporalAnalyzer:
             print(f"  Adding lag {lag} features...")
             for feature in gm3_features:
                 df_sorted[f'{feature}_lag{lag}'] = df_sorted.groupby('protein')[feature].shift(lag)
-                df_sorted[f'{feature}_diff{lag}'] = df_sorted[f'{feature}_lag{lag}'] - df_sorted[feature]
+                df_sorted[f'{feature}_diff{lag}'] = df_sorted[feature] - df_sorted[f'{feature}_lag{lag}']
         
         # Fill NaN with 0 for lagged features
         df_sorted = df_sorted.fillna(0)

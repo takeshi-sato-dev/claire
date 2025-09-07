@@ -41,7 +41,16 @@ class DiagnosticAnalyzer:
         
         # 2. GM3 analysis
         print("\n2. GM3 Analysis:")
-        gm3_col = 'gm3_contact_strength' if 'gm3_contact_strength' in frame_df.columns else 'gm3_contact_count'
+        # Use actual mediator column based on what was specified
+        mediator_cols = ['dpg3_contact_strength', 'gm3_contact_strength', 'dpg3_contact_count', 'gm3_contact_count']
+        gm3_col = None
+        for col in mediator_cols:
+            if col in frame_df.columns and frame_df[col].sum() > 0:
+                gm3_col = col
+                break
+        
+        if gm3_col is None:
+            gm3_col = 'gm3_contact_strength'  # fallback
         
         if gm3_col in frame_df.columns:
             gm3_stats = {
