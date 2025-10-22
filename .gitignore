@@ -1,53 +1,31 @@
-# Python
+# Data directories
+claire_output*/
+comparison*/
+temp_files/
+analysis/
+
+# Python cache
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
-.Python
+
+# Distribution
 build/
-develop-eggs/
 dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
 *.egg-info/
-.installed.cfg
-*.egg
 
-# Testing
-.tox/
-.coverage
-.coverage.*
-.cache
-.pytest_cache/
-htmlcov/
+# Virtual environments
+venv/
+env/
 
-# IDEs
+# IDE
 .vscode/
 .idea/
 *.swp
-*.swo
-*~
 
 # OS
 .DS_Store
-Thumbs.db
 
-# Project specific
-output/
-results/
-*.psf
-*.pdb
-*.gro
-*.xtc
-*.dcd
-*.trr
-test_output/
-debug_output/
-claire_output/
+# Never commit these
+.claude/
