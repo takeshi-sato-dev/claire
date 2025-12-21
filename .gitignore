@@ -1,0 +1,46 @@
+# Data directories
+claire_output*/
+comparison*/
+temp_files/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution
+build/
+dist/
+*.egg-info/
+
+# Virtual environments
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+
+# Data files
+*.xtc
+*.dcd
+*.trr
+*.psf
+*.pdb
+*.gro
+*.pkl
+*.csv
+
+# Japanese documentation (local only)
+CHANGES_SUMMARY.md
+FRAME_SELECTION_UPDATE.md
+QUICK_START.md
+USAGE_GUIDE.md
+
+# Never commit these
+.claude/
