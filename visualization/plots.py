@@ -73,12 +73,12 @@ def plot_composition_changes(results, lipid_types, output_path=None, figsize=(12
         Lipid types
     output_path : str, optional
         Path to save figure
-    figsize : tuple, default (12, 6)
+    figsize : tuple, default (18, 6)
         Figure size
     """
     setup_publication_style()
 
-    fig, axes = plt.subplots(1, 2, figsize=figsize)
+    fig, axes = plt.subplots(1, 3, figsize=figsize)
 
     # Panel A: Absolute changes
     ax = axes[0]
@@ -125,6 +125,27 @@ def plot_composition_changes(results, lipid_types, output_path=None, figsize=(12
     ax.set_xticks(range(len(lipid_types)))
     ax.set_xticklabels(lipid_types)
     ax.set_title('Percent Composition Changes', fontweight='bold')
+    ax.grid(axis='y', alpha=0.3)
+
+    # Panel C: Composition percentages (Low vs High)
+    ax = axes[2]
+    x = np.arange(len(lipid_types))
+    width = 0.35
+
+    low_ratios = [results[lt]['low_ratio'] * 100 for lt in lipid_types]
+    high_ratios = [results[lt]['high_ratio'] * 100 for lt in lipid_types]
+
+    ax.bar(x - width/2, low_ratios, width, label='Low (Unbound)',
+           color='#3498db', alpha=0.8, edgecolor='black', linewidth=1.5)
+    ax.bar(x + width/2, high_ratios, width, label='High (Bound)',
+           color='#e74c3c', alpha=0.8, edgecolor='black', linewidth=1.5)
+
+    ax.set_ylabel('Composition (%)', fontweight='bold')
+    ax.set_xlabel('Lipid Type', fontweight='bold')
+    ax.set_xticks(x)
+    ax.set_xticklabels(lipid_types)
+    ax.set_title('Lipid Composition (Low vs High)', fontweight='bold')
+    ax.legend()
     ax.grid(axis='y', alpha=0.3)
 
     plt.tight_layout()
