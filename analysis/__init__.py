@@ -1,13 +1,10 @@
-"""Analysis modules for composition, temporal, spatial, and ML analysis"""
+"""
+CLAIRE v2: Compositional analysis of lipid remodeling effects
+
+Analysis module providing hierarchical Bayesian inference for
+local lipid composition changes upon target lipid binding.
+"""
 
 from .composition import CompositionAnalyzer
-from .temporal import TemporalAnalyzer
-from .spatial import SpatialAnalyzer
-from .ml_predict import CompositionPredictor
 
-__all__ = [
-    'CompositionAnalyzer',
-    'TemporalAnalyzer',
-    'SpatialAnalyzer',
-    'CompositionPredictor',
-]
+__all__ = ['CompositionAnalyzer']

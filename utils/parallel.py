@@ -62,7 +62,8 @@ def test_multiprocessing():
 
 def process_frames_parallel(frames, top_file, traj_file, protein_segids,
                            leaflet_resids, lipid_types, contact_cutoff=15.0,
-                           target_lipid=None, tm_residues=None, n_workers=None, ctx_method='fork'):
+                           target_lipid=None, tm_residues=None, n_workers=None, ctx_method='fork',
+                           chain_a_pattern=None, chain_b_pattern=None):
     """Process frames in parallel
 
     Parameters
@@ -80,7 +81,7 @@ def process_frames_parallel(frames, top_file, traj_file, protein_segids,
     lipid_types : list of str
         Lipid residue names
     contact_cutoff : float, default 15.0
-        Contact cutoff distance (Å)
+        Contact cutoff distance (A)
     target_lipid : str, optional
         Target lipid name
     tm_residues : dict, optional
@@ -89,6 +90,10 @@ def process_frames_parallel(frames, top_file, traj_file, protein_segids,
         Number of parallel workers. If None, auto-detect.
     ctx_method : str, default 'fork'
         Multiprocessing context ('fork' or 'spawn')
+    chain_a_pattern : str, optional
+        MDAnalysis selection for sn-1 tail beads (for S_CD)
+    chain_b_pattern : str, optional
+        MDAnalysis selection for sn-2 tail beads (for S_CD)
 
     Returns
     -------
@@ -111,7 +116,8 @@ def process_frames_parallel(frames, top_file, traj_file, protein_segids,
     # Prepare arguments for each frame
     worker_args = [
         (frame_idx, top_file, traj_file, protein_segids, leaflet_resids,
-         lipid_types, contact_cutoff, target_lipid, tm_residues)
+         lipid_types, contact_cutoff, target_lipid, tm_residues,
+         chain_a_pattern, chain_b_pattern)
         for frame_idx in frames
     ]
 
@@ -135,7 +141,8 @@ def process_frames_parallel(frames, top_file, traj_file, protein_segids,
 
 
 def process_frames_serial(frames, universe, proteins, lipid_selections, leaflet,
-                          contact_cutoff=15.0, target_lipid=None, tm_residues=None):
+                          contact_cutoff=15.0, target_lipid=None, tm_residues=None,
+                          chain_a_pattern=None, chain_b_pattern=None):
     """Process frames serially (fallback)
 
     Parameters
@@ -151,11 +158,15 @@ def process_frames_serial(frames, universe, proteins, lipid_selections, leaflet,
     leaflet : MDAnalysis.AtomGroup
         Leaflet atoms
     contact_cutoff : float, default 15.0
-        Contact cutoff distance (Å)
+        Contact cutoff distance (A)
     target_lipid : str, optional
         Target lipid name
     tm_residues : dict, optional
         TM domain residue ranges {segid: (start, end)}
+    chain_a_pattern : str, optional
+        MDAnalysis selection for sn-1 tail beads (for S_CD)
+    chain_b_pattern : str, optional
+        MDAnalysis selection for sn-2 tail beads (for S_CD)
 
     Returns
     -------
@@ -177,7 +188,8 @@ def process_frames_serial(frames, universe, proteins, lipid_selections, leaflet,
 
         frame_data = calculate_frame_composition(
             universe, frame_idx, proteins, lipid_selections, leaflet,
-            contact_cutoff, target_lipid, tm_residues
+            contact_cutoff, target_lipid, tm_residues,
+            chain_a_pattern, chain_b_pattern
         )
 
         if frame_data is not None:
